@@ -1,0 +1,48 @@
+name: PracticalTeleprompter
+options:
+  bundleIdPrefix: com.practicalteleprompter
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: 5.0
+    IPHONEOS_DEPLOYMENT_TARGET: 16.0
+    TARGETED_DEVICE_FAMILY: "2"
+targets:
+  PracticalTeleprompter:
+    type: application
+    platform: iOS
+    sources:
+      - path: Sources
+      - path: Assets.xcassets
+    info:
+      path: Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.practicalteleprompter.ipad
+        PRODUCT_NAME: PracticalTeleprompter
+        GENERATE_INFOPLIST_FILE: NO
+        CODE_SIGNING_ALLOWED: NO
+        CODE_SIGNING_REQUIRED: NO
+        CODE_SIGN_IDENTITY: ""
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        SUPPORTS_MACCATALYST: NO
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
+        ENABLE_USER_SCRIPT_SANDBOXING: NO
+        ENABLE_BITCODE: NO
+        CURRENT_PROJECT_VERSION: 1
+        MARKETING_VERSION: 1.0.0
+        INFOPLIST_KEY_CFBundleDisplayName: 实用提词器
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.productivity
+    postBuildScripts:
+      - name: Copy bundled web app
+        script: |
+          rm -rf "$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/web"
+          ditto "$SRCROOT/../web" "$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/web"
+        basedOnDependencyAnalysis: false
+schemes:
+  PracticalTeleprompter:
+    build:
+      targets:
+        PracticalTeleprompter: all

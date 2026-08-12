@@ -1,0 +1,37 @@
+name: 构建 iPad IPA
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+    paths:
+      - "web/**"
+      - "ipad/**"
+      - ".github/workflows/build-ipad-ipa.yml"
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - name: 获取项目
+        uses: actions/checkout@v4
+
+      - name: 安装 XcodeGen
+        run: brew install xcodegen
+
+      - name: 构建未签名 IPA
+        run: bash ipad/build-ipa.sh
+
+      - name: 检查 IPA 内容
+        run: |
+          test -s output/PracticalTeleprompter-unsigned.ipa
+          unzip -l output/PracticalTeleprompter-unsigned.ipa | grep "Payload/PracticalTeleprompter.app/web/index.html"
+
+      - name: 上传 IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: PracticalTeleprompter-iPad-IPA
+          path: output/PracticalTeleprompter-unsigned.ipa
+          if-no-files-found: error
+          retention-days: 30
